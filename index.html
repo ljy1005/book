@@ -94,7 +94,7 @@ main{margin-left:236px;padding:34px 40px 90px;position:relative;z-index:1;min-he
 .overlay.open{display:flex;animation:fade .2s ease}@keyframes fade{from{opacity:0}}
 .modal{background:var(--paper2);border-radius:14px;max-width:680px;width:100%;max-height:88vh;overflow:auto;padding:30px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:pop .28s cubic-bezier(.34,1.3,.5,1)}
 @keyframes pop{from{opacity:0;transform:scale(.94) translateY(12px)}}
-.modal.small{max-width:440px}.mclose{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-soft);transition:.15s}
+.modal.small{max-width:460px}.mclose{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-soft);transition:.15s}
 .mclose:hover{color:var(--verm);transform:rotate(90deg)}
 .d-body{display:grid;grid-template-columns:190px 1fr;gap:26px}
 .d-cover{width:190px;height:260px;border-radius:3px 7px 7px 3px;background-size:cover;background-position:center;display:grid;place-items:center;color:#f6efe0;font-family:var(--serif);writing-mode:vertical-rl;letter-spacing:6px;font-size:26px;padding:20px;box-shadow:inset 10px 0 16px rgba(0,0,0,.3),0 10px 24px rgba(0,0,0,.28)}
@@ -105,13 +105,17 @@ main{margin-left:236px;padding:34px 40px 90px;position:relative;z-index:1;min-he
 .seg button{border:none;background:#fff;padding:7px 18px;font-size:13px;color:var(--ink-soft);border-right:1px solid var(--line)}.seg button:last-child{border-right:none}
 .seg button.on{background:var(--green);color:#fff}.seg button.on.s-外借{background:var(--amber)}.seg button.on.s-出库{background:#7d6b6b}
 .d-acts{display:flex;gap:10px;flex-wrap:wrap}
-.scan-frame{position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:4/3;margin:16px 0 12px}
+.scan-frame{position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:4/3;margin:16px 0 10px}
 .scan-frame video{width:100%;height:100%;object-fit:cover;display:block}
 .scan-line{position:absolute;left:8%;right:8%;height:2px;background:var(--verm);box-shadow:0 0 12px 2px rgba(191,59,43,.8);animation:scanmove 2.2s ease-in-out infinite}
 @keyframes scanmove{0%,100%{top:12%}50%{top:86%}}
 .scan-frame::before,.scan-frame::after{content:"";position:absolute;width:26px;height:26px;border:3px solid rgba(255,255,255,.85)}
 .scan-frame::before{top:10px;left:10px;border-right:none;border-bottom:none}.scan-frame::after{bottom:10px;right:10px;border-left:none;border-top:none}
-.scan-tip{font-size:12px;color:rgba(246,241,231,.65);margin:10px 0 14px;line-height:1.7}
+.cam-ctl{display:flex;flex-direction:column;gap:8px;margin:4px 0 8px}
+.cam-row{display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(246,241,231,.75)}
+.cam-row input[type=range]{flex:1;accent-color:#e0705d;padding:0;border:none;height:26px;background:transparent;box-shadow:none}
+.cam-row .btn{padding:4px 12px;font-size:12px}
+.scan-tip{font-size:12px;color:rgba(246,241,231,.65);margin:10px 0 14px;line-height:1.8}
 .row-end{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
 #cfMsg{font-size:13.5px;color:var(--ink-soft);line-height:1.7}
 #toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);z-index:99;background:#2a2723;color:#f6f1e7;padding:11px 22px;border-radius:30px;font-size:13.5px;opacity:0;pointer-events:none;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:86vw}
@@ -180,7 +184,7 @@ main{margin-left:236px;padding:34px 40px 90px;position:relative;z-index:1;min-he
         <div class="cover-box" id="coverBox" title="点击从相册选择封面"><div class="cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m5 19 5-5 3 3 4-4 3 3"/></svg>点击上传 / 拍照作为封面</div></div>
         <div class="side-actions">
           <button class="btn green" id="btnScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M3 12h18"/></svg>扫描 ISBN 条码</button>
-          <div class="scan-hint">内置解码器，无外部依赖</div>
+          <div class="scan-hint">支持对焦/变焦调节 · 双源联网查询</div>
           <div style="display:flex;gap:10px"><button class="btn ghost" id="btnPhoto" style="flex:1">拍照</button><button class="btn ghost" id="btnAlbum" style="flex:1">从相册选择</button></div>
           <button class="btn ghost" id="btnQuery">按 ISBN 联网查询填充</button>
           <button class="btn danger" id="btnCoverRemove" style="display:none">移除封面</button>
@@ -231,8 +235,15 @@ main{margin-left:236px;padding:34px 40px 90px;position:relative;z-index:1;min-he
   <div class="modal small" style="background:#1d2822;color:#f6f1e7">
     <h3 style="letter-spacing:3px">扫描书背条码</h3>
     <div class="scan-frame"><video id="scanVideo" playsinline muted></video><div class="scan-line"></div></div>
-    <button class="btn ghost" id="btnScanAlbum" style="width:100%;justify-content:center;margin-bottom:6px">选择条码照片识别</button>
-    <p class="scan-tip">支持 EAN-13/ISBN 条码。若摄像头无法打开：① 请用 Chrome/Edge 并以 https 或 localhost 方式运行（直接双击文件时浏览器禁止调用摄像头）；② 用手机/相机拍好条码，点上方按钮选照片识别；③ 手动输入 ISBN 后「联网查询」。</p>
+    <div class="cam-ctl" id="camCtl" style="display:none">
+      <div class="cam-row"><span>对焦</span><input type="range" id="focusRange"><button class="btn ghost" id="btnAF">自动</button></div>
+      <div class="cam-row" id="zoomRow" style="display:none"><span>变焦</span><input type="range" id="zoomRange"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin:4px 0 6px">
+      <button class="btn green" id="btnCapture" style="flex:1;justify-content:center">拍照识别</button>
+      <button class="btn ghost" id="btnScanAlbum" style="flex:1;justify-content:center">选择条码照片</button>
+    </div>
+    <p class="scan-tip">① 光线充足，条码水平并尽量占满取景框；② 画面模糊时拖「对焦」滑杆拉近焦距，或点「自动」恢复连续对焦；③ 稳定后仍扫不出，点「拍照识别」精细解码；④ 查询依次尝试 Open Library 与 Google 图书两个数据源，国内书后者收录更全。</p>
     <button class="btn ghost" id="btnScanCancel" style="width:100%;justify-content:center">取消</button>
   </div>
 </div>
@@ -242,7 +253,6 @@ main{margin-left:236px;padding:34px 40px 90px;position:relative;z-index:1;min-he
 <input type="file" id="inputPhoto" accept="image/*" capture="environment" hidden>
 <input type="file" id="inputImport" accept=".json,.csv,application/json,text/csv" hidden>
 <input type="file" id="inputScanImg" accept="image/*" hidden>
-<!-- 目录数据独立文件：与本页同目录放置；缺失时程序仍可正常运行 -->
 <script src="shuxia-data.js"></script>
 <script>
 'use strict';
@@ -259,12 +269,10 @@ $('#cfYes').onclick=()=>{$('#confirmModal').classList.remove('open');if(cfCb)cfC
 $('#cfNo').onclick=()=>$('#confirmModal').classList.remove('open');
 function xlDate(n){if(!n)return '';const d=new Date(Date.UTC(1899,11,30)+n*864e5);return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0');}
 
-/* ============ 目录数据（来自 shuxia-data.js） ============ */
 const SEED=window.SHUXIA_SEED||[];
 const verList=m=>VERS.filter((v,i)=>m&(1<<i));
 function seedBooks(){const now=Date.now();return SEED.map((r,i)=>({id:'cat'+(i+1),xu:i+1,title:r[0],banben:verList(r[1]||0),huizhe:r[2]||'',fengmian:'',yuanzhu:'',chubanshe:'上美',taoxi:r[6]||'',jishu:r[10]||'',ticai:r[7]||'',shidai:'',chuban:xlDate(r[3]),kaiben:'',zhuangzhen:'',yinshu:r[8]||'',dingjia:r[4]||'',fengge:'',zongye:r[5]||'',tuye:'',isbn:'',goumaiT:'',goumaiJ:'',goumaiP:'',status:'在库',pinxiang:'',waijie:'',chuku:'',notes:r[9]||'',rushi:'',cover:'',createdAt:now,updatedAt:now,source:'连环画录·上美大精目录'}));}
 
-/* ============ IndexedDB ============ */
 let db;
 function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('shuxia-lianhua',1);r.onupgradeneeded=e=>e.target.result.createObjectStore('books',{keyPath:'id'});r.onsuccess=e=>{db=e.target.result;res();};r.onerror=()=>rej(r.error);});}
 const dbAll=()=>new Promise((res,rej)=>{const q=db.transaction('books').objectStore('books').getAll();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);});
@@ -278,7 +286,6 @@ const SPINE=['#a03a2a','#2f5d50','#37567a','#a8792c','#5c4a72','#74502d','#41705
 const TC_COLOR={'样板戏':'#8f4352','广阔天地':'#41705a','三国五虎将':'#37567a','三国故事':'#37567a','西游记故事':'#a8792c','聊斋故事选':'#5c4a72','官场现形记':'#74502d','二十年目睹之怪现状':'#74502d','中国古代战争故事':'#a03a2a','山中猎手':'#274a52','铁道游击队':'#2f5d50','李自成':'#8a6238'};
 const spineColor=b=>TC_COLOR[b.ticai]||SPINE[[...(b.taoxi||b.title)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7)%SPINE.length];
 
-/* ============ 导航（修复：进入录入页自动重置表单） ============ */
 function showPage(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));$$('.nav-btn,.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0});}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-page],[data-goto]');if(!g)return;const id=g.dataset.page||g.dataset.goto;if(id==='add')resetForm();showPage(id);});
 
@@ -293,7 +300,6 @@ function renderStats(){
   [...row.children].forEach((el,i)=>countUp(el.querySelector('b'),items[i][1]));
   $('#shelfSub').textContent=books.length?`${books.length} 种连环画 · 上美大精目录整理入库`:'书架还空着，放入你的第一本吧';
 }
-/* ============ 书架（含归类整理） ============ */
 function bookItemHTML(b){
   const h=140+(([...b.title].reduce((a,c)=>a+c.charCodeAt(0),0))%3)*14;
   const flag=b.status==='外借'?'<i class="flag f-out">借</i>':b.status==='出库'?'<i class="flag f-gone">出</i>':'';
@@ -360,7 +366,6 @@ $('#listRows').addEventListener('change',async e=>{
 });
 ['q','fStatus','fTaoxi','fTicai','sortBy'].forEach(id=>$('#'+id).addEventListener('input',renderList));
 
-/* ============ 详情 ============ */
 function openDetail(id){
   const b=getById(id);if(!b)return;detailId=id;
   const cover=b.cover?`<div class="d-cover" style="background-image:url('${b.cover}')"></div>`:`<div class="d-cover" style="background:linear-gradient(160deg,${spineColor(b)},${spineColor(b)}aa)">${esc(b.title.slice(0,8))}</div>`;
@@ -379,7 +384,6 @@ $('#detailBody').addEventListener('click',async e=>{
 $$('.overlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov||e.target.closest('[data-close]')){ov.classList.remove('open');if(ov.id==='scanModal')closeScanner();}}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){$$('.overlay.open').forEach(o=>o.classList.remove('open'));closeScanner();}});
 
-/* ============ 表单 ============ */
 const FIELDS=['title','huizhe','fengmian','yuanzhu','taoxi','jishu','ticai','shidai','chuban','kaiben','zhuangzhen','yinshu','dingjia','fengge','zongye','tuye','isbn','goumaiT','goumaiJ','goumaiP','pinxiang','waijie','chuku','rushi','notes'];
 function setCover(src){currentCover=src||'';const box=$('#coverBox');
   if(currentCover){box.innerHTML=`<img src="${currentCover}">`;$('#btnCoverRemove').style.display='';}
@@ -404,7 +408,7 @@ function fileToDataURL(file,max=640){return new Promise((res,rej)=>{const img=ne
 async function onPickImage(e){const f=e.target.files[0];e.target.value='';if(!f)return;try{setCover(await fileToDataURL(f));toast('封面已添加');}catch{toast('图片读取失败');}}
 $('#inputAlbum').addEventListener('change',onPickImage);$('#inputPhoto').addEventListener('change',onPickImage);
 
-/* ============ EAN-13 内置解码器（无外部依赖） ============ */
+/* ============ EAN-13 内置解码器 ============ */
 const LT={'3211':0,'2221':1,'2122':2,'1411':3,'1132':4,'1231':5,'1114':6,'1312':7,'1213':8,'3112':9};
 const GT={'1123':0,'1223':1,'2213':2,'1141':3,'2311':4,'1321':5,'4111':6,'2131':7,'3121':8,'2113':9};
 const PAR={'LLLLLL':0,'LLGLGG':1,'LLGGLG':2,'LLGGGL':3,'LGLLGG':4,'LGGLLG':5,'LGGGLL':6,'LGLGLG':7,'LGLGGL':8,'LGGLGL':9};
@@ -417,7 +421,7 @@ function decodeRow(g){
   runs.push([cur,len]);
   for(let s=0;s<runs.length-45;s++){
     if(runs[s][0]!==1)continue;
-    const R=runs.slice(s),d=attempt(R);if(d)return d;
+    const d=attempt(runs.slice(s));if(d)return d;
   }
   return null;
 }
@@ -444,73 +448,129 @@ function attempt(R){
   return digits.join('');
 }
 function decodeCanvas(ctx,W,H,deep){
-  const steps=deep?14:6;
+  const steps=deep?20:8;
   for(let i=0;i<steps;i++){
-    const y=Math.round(H*(0.3+0.44*i/(steps-1)));
+    const y=Math.round(H*(0.28+0.48*i/(steps-1)));
     const row=ctx.getImageData(0,y,W,1).data,g=new Uint8ClampedArray(W);
     for(let x=0;x<W;x++)g[x]=(row[x*4]*3+row[x*4+1]*4+row[x*4+2])>>3;
     const r=decodeRow(g);if(r)return r;
   }
   return null;
 }
-/* ============ 扫码 ============ */
-let scanStream=null,scanTimer=null;
+/* ============ 扫码（含对焦/变焦控制） ============ */
+let scanStream=null,scanTimer=null,scanTrack=null;
 async function openScanner(){
   $('#scanModal').classList.add('open');
   const video=$('#scanVideo');
-  try{scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});video.srcObject=scanStream;await video.play();}
-  catch(e){toast('摄像头不可用：可改用「选择条码照片识别」或手动输入 ISBN');return;}
-  const hasNative='BarcodeDetector' in window;
-  const det=hasNative?new BarcodeDetector({formats:['ean_13','ean_8','upc_a','code_128','qr_code']}):null;
+  try{
+    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}});
+  }catch(e){toast('摄像头不可用：请改用照片识别或手动输入 ISBN');return;}
+  video.srcObject=scanStream;await video.play().catch(()=>{});
+  scanTrack=scanStream.getVideoTracks()[0];
+  initCamControls();
+  const det=('BarcodeDetector' in window)?new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128','qr_code']}):null;
   const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
   scanTimer=setInterval(async()=>{
     if(!video||video.readyState<2)return;
     try{
       if(det){const c=await det.detect(video);if(c&&c.length){onHit(c[0].rawValue);return;}}
-      const W=Math.min(640,video.videoWidth);if(!W)return;
+      const W=Math.min(960,video.videoWidth);if(!W)return;
       cv.width=W;cv.height=Math.round(W*video.videoHeight/video.videoWidth);
       cx.drawImage(video,0,0,cv.width,cv.height);
       const r=decodeCanvas(cx,cv.width,cv.height,false);if(r)onHit(r);
     }catch(e){}
-  },280);
+  },260);
 }
-function onHit(code){beep();closeScanner();$('#f_isbn').value=code.replace(/[^0-9Xx]/g,'');toast(`已识别：${code}`);showPageKeep();if(/^\d{10}$|^\d{13}$/.test(code))fetchByISBN(code,false);}
-function showPageKeep(){/* 扫码命中后停留在录入页且不清表单 */showPage('add');editingId=editingId;/* showPage('add') 会 reset，故手动恢复 ISBN */}
-/* 注意：导航 reset 只发生在用户点击导航；此处直接调用内部填充 */
-function closeScanner(){clearInterval(scanTimer);scanTimer=null;if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}$('#scanModal').classList.remove('open');}
-/* 修正 onHit：避免被 reset 清掉 */
-onHit=function(code){beep();closeScanner();showPage('add');$('#f_isbn').value=code.replace(/[^0-9Xx]/g,'');toast(`已识别：${code}`);if(/^\d{10}$|^\d{13}$/.test(code))fetchByISBN(code,false);};
+function initCamControls(){
+  const caps=scanTrack.getCapabilities?scanTrack.getCapabilities():{};
+  let show=false;
+  const fr=$('#focusRange');
+  if(caps.focusDistance){
+    show=true;fr.style.display='';fr.disabled=false;
+    fr.min=caps.focusDistance.min;fr.max=caps.focusDistance.max;
+    fr.step=caps.focusDistance.step||((caps.focusDistance.max-caps.focusDistance.min)/100)||0.01;
+    fr.value=fr.min;
+    if(caps.focusMode&&caps.focusMode.includes('continuous'))scanTrack.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(()=>{});
+    fr.oninput=()=>scanTrack.applyConstraints({advanced:[{focusMode:'manual',focusDistance:+fr.value}]}).catch(()=>{});
+  }else{fr.style.display='none';fr.disabled=true;}
+  const zr=$('#zoomRange');
+  if(caps.zoom){
+    show=true;$('#zoomRow').style.display='';
+    zr.min=caps.zoom.min;zr.max=Math.min(caps.zoom.max,4);zr.step=caps.zoom.step||0.1;
+    zr.value=Math.min(1.5,caps.zoom.max);
+    zr.oninput=()=>scanTrack.applyConstraints({advanced:[{zoom:+zr.value}]}).catch(()=>{});
+    scanTrack.applyConstraints({advanced:[{zoom:+zr.value}]}).catch(()=>{});
+  }else $('#zoomRow').style.display='none';
+  $('#camCtl').style.display=show?'':'none';
+}
+$('#btnAF').onclick=()=>{
+  if(!scanTrack)return;
+  const caps=scanTrack.getCapabilities?.()||{};
+  if(caps.focusMode&&caps.focusMode.includes('continuous')){scanTrack.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(()=>{});toast('已切换连续自动对焦');}
+  else toast('该设备不支持自动对焦切换，请用滑杆手动对焦');
+};
+$('#btnCapture').onclick=()=>{
+  const video=$('#scanVideo');if(!video.videoWidth)return;
+  const cv=document.createElement('canvas');cv.width=video.videoWidth;cv.height=video.videoHeight;
+  const cx=cv.getContext('2d',{willReadFrequently:true});cx.drawImage(video,0,0);
+  const r=decodeCanvas(cx,cv.width,cv.height,true);
+  if(r)onHit(r);else toast('未识别：请让条码占满取景框、保持水平稳定，或调节对焦后再试');
+};
+function onHit(code){
+  code=String(code).trim();
+  beep();closeScanner();showPage('add');
+  $('#f_isbn').value=code.replace(/[^0-9Xx]/g,'');
+  toast(`已识别：${code}`);
+  if(/^\d{10}$|^\d{13}$/.test(code))fetchByISBN(code);
+}
+function closeScanner(){clearInterval(scanTimer);scanTimer=null;if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}scanTrack=null;$('#scanModal').classList.remove('open');}
 $('#btnScan').onclick=openScanner;$('#btnScanCancel').onclick=closeScanner;
 $('#btnScanAlbum').onclick=()=>$('#inputScanImg').click();
 $('#inputScanImg').addEventListener('change',e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
   const img=new Image(),url=URL.createObjectURL(f);
   img.onload=()=>{
-    const W=Math.min(1000,img.width),H=Math.round(W*img.height/img.width);
+    const W=Math.min(1200,img.width),H=Math.round(W*img.height/img.width);
     const cv=document.createElement('canvas');cv.width=W;cv.height=H;
     const cx=cv.getContext('2d',{willReadFrequently:true});cx.drawImage(img,0,0,W,H);URL.revokeObjectURL(url);
     const r=decodeCanvas(cx,W,H,true);
-    if(r){closeScanner();$('#f_isbn').value=r;toast(`照片识别成功：${r}`);if(/^\d{13}$/.test(r))fetchByISBN(r,false);}
+    if(r){closeScanner();onHit(r);}
     else toast('未识别到 EAN-13 条码，请换一张更清晰、条码水平的照片');
   };
   img.onerror=()=>toast('图片读取失败');img.src=url;
 });
-async function fetchByISBN(isbn,keep=true){
+/* ============ 联网查询：Open Library → Google 图书 ============ */
+function applyInfo(o){
+  const set=(id,v)=>{const el=$('#'+id);if(v&&!el.value)el.value=v;};
+  set('f_title',o.title);set('f_yuanzhu',o.author);set('f_chubanshe',o.pub);set('f_chuban',o.year);set('f_zongye',o.pages);
+  if(o.cover&&!currentCover)setCover(o.cover);
+}
+async function fetchByISBN(raw){
+  const isbn=String(raw||'').replace(/[^0-9Xx]/g,'');
   if(!isbn){toast('请先输入或扫描 ISBN');return;}
-  toast('联网查询中…');
+  toast('联网查询中（双数据源）…');
+  let filled=false;
   try{
     const r=await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
     const j=await r.json();const d=j['ISBN:'+isbn];
-    if(!d){toast('未查询到该书信息，请手动填写');return;}
-    const fill=(id,v)=>{const el=$('#'+id);if(v&&(!keep||!el.value))el.value=v;};
-    fill('f_title',d.title);fill('f_yuanzhu',(d.authors||[]).map(a=>a.name).join('、'));fill('f_chubanshe',(d.publishers||[]).map(p=>p.name).join('、'));fill('f_chuban',(d.publish_date||'').match(/\d{4}/)?.[0]||'');
-    if(!currentCover&&d.cover)setCover(d.cover.large||d.cover.medium||d.cover.small);
-    toast('已自动填充部分信息');
-  }catch(e){toast('网络不可用或未收录，请手动填写');}
+    if(d){applyInfo({title:d.title,author:(d.authors||[]).map(a=>a.name).join('、'),pub:(d.publishers||[]).map(p=>p.name).join('、'),year:(d.publish_date||'').match(/\d{4}/)?.[0]||'',pages:d.number_of_pages||'',cover:d.cover?(d.cover.large||d.cover.medium||d.cover.small):''});filled=true;}
+  }catch(e){}
+  if(!filled){
+    try{
+      const r=await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+      const j=await r.json();
+      if(j.items&&j.items[0]){
+        const v=j.items[0].volumeInfo||{};
+        applyInfo({title:v.title,author:(v.authors||[]).join('、'),pub:v.publisher||'',year:(v.publishedDate||'').match(/\d{4}/)?.[0]||'',pages:v.pageCount||'',cover:((v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail))||'').replace('http://','https://')});
+        filled=true;
+      }
+    }catch(e){}
+  }
+  toast(filled?'已自动填充图书信息':'Open Library 与 Google 图书均未收录该 ISBN，请手动填写');
 }
-$('#btnQuery').onclick=()=>fetchByISBN($('#f_isbn').value.trim(),true);
+$('#btnQuery').onclick=()=>fetchByISBN($('#f_isbn').value);
 
-/* ============ 导出：JSON / XLSX / CSV；导入：JSON / CSV ============ */
+/* ============ 导出 / 导入 ============ */
 const COLS=[['xu','序号'],['title','书名'],['chubanshe','出版社'],['taoxi','套系'],['jishu','套系集数'],['ticai','题材'],['huizhe','绘者'],['fengmian','封面绘者'],['yuanzhu','原著作者'],['chuban','出版时间'],['kaiben','开本'],['zhuangzhen','装帧'],['banben','版本'],['yinshu','印数（千）'],['dingjia','定价'],['fengge','风格'],['zongye','总页数'],['tuye','图页数'],['isbn','ISBN'],['goumaiT','购买时间'],['goumaiJ','购买价格'],['goumaiP','购买平台'],['status','状态'],['pinxiang','品相'],['waijie','外借记录'],['chuku','出库记录'],['rushi','入库时间'],['notes','备注']];
 const NUMK=new Set(['xu','yinshu','dingjia','zongye','tuye','goumaiJ']);
 const cellVal=(b,k)=>k==='banben'?(b.banben||[]).join('/'):b[k]??'';
@@ -522,7 +582,6 @@ $('#btnCsv').onclick=()=>{
   books.forEach(b=>lines.push(COLS.map(c=>q(cellVal(b,c[0]))).join(',')));
   download(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv'}),`书匣藏书_${Date.now()}.csv`);toast('CSV 已导出（Excel 可直接打开）');
 };
-/* 迷你 xlsx 生成器（store-only zip） */
 let CRCT;function crcT(){if(CRCT)return CRCT;CRCT=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;CRCT[n]=c;}return CRCT;}
 function crc32(u){const t=crcT();let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=t[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
 function makeZip(files){
@@ -613,7 +672,6 @@ async function importSeed(force){
 $('#btnReseed').onclick=()=>ask('重新载入目录数据','将写入《上美大精目录》目录（同 ID 覆盖），手动新增的藏品不受影响。',()=>importSeed(true));
 $('#btnWipe').onclick=()=>ask('清空全部数据','将删除本机全部藏品与封面，不可恢复。建议先导出备份。',async()=>{await dbClearAll();books=[];resetForm();renderAll();toast('数据已清空');});
 
-/* ============ 启动 ============ */
 (async function init(){
   try{
     await openDB();books=await dbAll();
